@@ -28,8 +28,8 @@ def get_optimizers_and_schedulers(gen, disc):
     # The learning rate for the generator should be decayed to 0 over
     # 100K iterations.
     ##################################################################
-    scheduler_discriminator = None
-    scheduler_generator = None
+    scheduler_discriminator = torch.optim.lr_scheduler.LinearLR(optim_discriminator, 1, 0, 500e3)
+    scheduler_generator = torch.optim.lr_scheduler.LinearLR(optim_generator, 1, 0, 100e3)
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################
@@ -105,8 +105,15 @@ def train_model(
                 # 2. Compute discriminator output on the train batch.
                 # 3. Compute the discriminator output on the generated data.
                 ##################################################################
-                discrim_real = None
-                discrim_fake = None
+                # 1. Compute generator output
+                # Note: The number of samples must match the batch size.
+                fake_batch = gen(len(train_batch))
+                
+                # 2. Compute discriminator output on the train batch.
+                discrim_real = disc(train_batch)
+                
+                # 3. Compute the discriminator output on the generated data.
+                discrim_fake = disc(fake_batch)
                 ##################################################################
                 #                          END OF YOUR CODE                      #
                 ##################################################################
@@ -136,8 +143,8 @@ def train_model(
                     # TODO 1.2: Compute generator and discriminator output on
                     # generated data.
                     ###################################################################
-                    fake_batch = None
-                    discrim_fake = None
+                    fake_batch = gen(len(train_batch))
+                    discrim_fake = disc(fake_batch)
                     ##################################################################
                     #                          END OF YOUR CODE                      #
                     ##################################################################
@@ -156,7 +163,12 @@ def train_model(
                         # TODO 1.2: Generate samples using the generator.
                         # Make sure they lie in the range [0, 1]!
                         ##################################################################
-                        generated_samples = None
+                        eps = 1e-5
+                        generated_samples = gen(len(train_batch))
+                        samples_min = torch.min(generated_samples) - eps
+                        samples_max = torch.max(generated_samples) + eps
+                        generated_samples = (generated_samples - samples_min
+                                             ) / (samples_max - samples_min)
                         ##################################################################
                         #                          END OF YOUR CODE                      #
                         ##################################################################

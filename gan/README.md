@@ -19,3 +19,4 @@ Additionally, implement the interpolated batch (which is necessary for the loss)
 
 [3] Improved Training of Wasserstein GANs (Gulrajani et al, 2017): https://arxiv.org/pdf/1704.00028.pdf
 
+GANs

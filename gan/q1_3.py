@@ -17,7 +17,7 @@ def compute_discriminator_loss(
     # Do not use discrim_interp, interp, lamb. They are placeholders
     # for Q1.5.
     ##################################################################
-    loss = None
+    loss = -(discrim_real.log() + (1-discrim_fake).log()).mean()
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################
@@ -28,7 +28,7 @@ def compute_generator_loss(discrim_fake):
     ##################################################################
     # TODO 1.3: Implement GAN loss for the generator.
     ##################################################################
-    loss = None
+    loss = (1-discrim_fake).log().mean()
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################
