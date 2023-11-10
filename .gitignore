@@ -13,3 +13,4 @@ diffusion_solutions/data_ddim/
 diffusion_solutions/data_ddpm/
 diffusion_solutions/epoch_199.pth
 diffusion/epoch_199.pth
+vae/data/cifar-10-python.tar.gz
