@@ -22,7 +22,11 @@ def get_fid(gen, dataset_name, dataset_resolution, z_dimension, batch_size, num_
     # num_gen,              10000
     shape = (batch_size, 3, dataset_resolution, dataset_resolution)
     sample_fn = gen.sample_ddpm if not gen.is_ddim_sampling else gen.sample_ddim
-    gen_fn = lambda z: sample_fn(shape, z.reshape(shape))
+    def gen_fn(z): 
+        x = sample_fn(shape, z.reshape(shape))
+        return (x - x.min())/(x.max()-x.min()) * 255
+    dataset_name =  'cub'
+    dataset_split = 'custom' # "train"
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################
@@ -34,7 +38,7 @@ def get_fid(gen, dataset_name, dataset_resolution, z_dimension, batch_size, num_
         z_dim=z_dimension,
         batch_size=batch_size,
         verbose=True,
-        dataset_split="train",
+        dataset_split=dataset_split,
     )
     return score
 
