@@ -11,9 +11,24 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "env": {"PYTORCH_JIT": "0"},
-            "cwd": "${workspaceFolder}/gan",
-            "args": ["--disable_amp"]
+            "env": {
+                "PYTORCH_JIT": "0",
+                // "CUDA_LAUNCH_BLOCKING": "1",
+                // "TORCH_USE_CUDA_DSA": "1"
+            },
+            "cwd": "${workspaceFolder}/diffusion",
+            "args": [
+                "--ckpt",
+                "epoch_199.pth",
+                "--sampling-method",
+                // "ddpm",
+                "ddim",
+                "--ddim-timesteps",
+                "100",
+                "--ddim-eta", 
+                "0",
+                "--compute-fid"
+            ]
         }
     ]
 }

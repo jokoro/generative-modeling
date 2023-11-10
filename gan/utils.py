@@ -41,12 +41,19 @@ def interpolate_latent_space(gen, path):
     # Use torchvision.utils.save_image to save out the visualization.
     ##################################################################
     z = torch.zeros(100, 128, device='cuda')
+    
     l = torch.linspace(-1, 1, steps=10)
     x, y = torch.meshgrid(l,l)
     x = x.flatten()
     y = y.flatten()
+    
     z[:,:2] = torch.stack([x,y]).T    
     x = gen.forward_given_samples(z)
+    
+    x_min = x.min(1, True)[0].min(2, True)[0].min(3, True)[0]
+    x_max = x.max(1, True)[0].max(2, True)[0].max(3, True)[0]
+    x = (x - x_min) / (x_max - x_min)
+
     torchvision.utils.save_image(x, path)
     ##################################################################
     #                          END OF YOUR CODE                      #

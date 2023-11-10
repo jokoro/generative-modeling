@@ -14,7 +14,15 @@ def get_fid(gen, dataset_name, dataset_resolution, z_dimension, batch_size, num_
     # diffusion model given z
     # Note: The output must be in the range [0, 255]!
     ##################################################################
-    gen_fn = None
+    # gen,                  DiffusionModel
+    # dataset_name,         'cifar10'
+    # dataset_resolution,   32
+    # z_dimension,          3072
+    # batch_size,           256
+    # num_gen,              10000
+    shape = (batch_size, 3, dataset_resolution, dataset_resolution)
+    sample_fn = gen.sample_ddpm if not gen.is_ddim_sampling else gen.sample_ddim
+    gen_fn = lambda z: sample_fn(shape, z.reshape(shape))
     ##################################################################
     #                          END OF YOUR CODE                      #
     ##################################################################

@@ -122,8 +122,9 @@ def train_model(
                 # TODO 1.5 Compute the interpolated batch and run the
                 # discriminator on it.
                 ###################################################################
-                interp = None
-                discrim_interp = None
+                eps = torch.rand(len(train_batch), 1, 1, 1, device='cuda')
+                interp = eps * train_batch + (1 - eps) * fake_batch
+                discrim_interp = disc(interp)
                 ##################################################################
                 #                          END OF YOUR CODE                      #
                 ##################################################################
@@ -163,12 +164,10 @@ def train_model(
                         # TODO 1.2: Generate samples using the generator.
                         # Make sure they lie in the range [0, 1]!
                         ##################################################################
-                        eps = 1e-5
                         generated_samples = gen(len(train_batch))
-                        samples_min = torch.min(generated_samples) - eps
-                        samples_max = torch.max(generated_samples) + eps
-                        generated_samples = (generated_samples - samples_min
-                                             ) / (samples_max - samples_min)
+                        samples_min = generated_samples.min(1, True)[0].min(2, True)[0].min(3, True)[0]
+                        samples_max = generated_samples.max(1, True)[0].max(2, True)[0].max(3, True)[0]
+                        generated_samples = (generated_samples - samples_min) / (samples_max - samples_min)
                         ##################################################################
                         #                          END OF YOUR CODE                      #
                         ##################################################################
